@@ -9,6 +9,13 @@ export function useTypingTest(initialState: TestState, mode: TestMode) {
         setState((prevState) => processKey(prevState, key, mode));
     }, [mode]);
 
+    const completeTest = useCallback(() => {
+        setState((prevState) => ({
+            ...prevState,
+            status: "completed",
+        }))
+    }, []);
+
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
             handleKey(event.key);
@@ -24,5 +31,6 @@ export function useTypingTest(initialState: TestState, mode: TestMode) {
     return {
         state,
         handleKey,
+        completeTest
     }
 }

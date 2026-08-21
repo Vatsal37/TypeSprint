@@ -7,9 +7,10 @@ interface TypingTextProps {
     typedWords: TestState["typedWords"];
     currentTypedWord: TestState["currentTypedWord"];
     currentWordIndex: TestState["currentWordIndex"];
+    status: TestState["status"]
 }
 
-export function TypingText({ targetWords, typedWords, currentTypedWord, currentWordIndex }: TypingTextProps) {
+export function TypingText({ targetWords, typedWords, currentTypedWord, currentWordIndex, status }: TypingTextProps) {
     const charRefs = useRef<(HTMLSpanElement | null)[][]>([]);
     const containerRef = useRef<HTMLDivElement>(null);
     const caretRef = useRef<HTMLSpanElement>(null);
@@ -45,12 +46,12 @@ export function TypingText({ targetWords, typedWords, currentTypedWord, currentW
     }, [currentWordIndex, currentTypedWord]);
 
     return (
-        <div ref={containerRef} className="relative text-2xl font-mono whitespace-pre-wrap">
+        <div ref={containerRef} className="relative text-3xl font-semibold whitespace-pre-wrap">
             {targetWords.map((word, index) => (
                 <TypingWord key={index} targetWord={word} typedWord={index < currentWordIndex ? typedWords[index] : index === currentWordIndex ? currentTypedWord : ""} onCharRefs={(charIndex, element) => onCharRefs(index, charIndex, element)} />
             ))}
 
-            <span ref={caretRef} className="absolute w-0.5 bg-current animate-pulse transition-transform duration-75 ease-out"/>
+            <span ref={caretRef} className={`absolute w-[0.2rem] top-0 left-0 bg-amber-400 ${status === "running" ? "animate-blink" : ""} transition-transform duration-100 ease-out`}/>
         </div>
     )
 }
