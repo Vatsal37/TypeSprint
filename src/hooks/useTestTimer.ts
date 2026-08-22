@@ -1,22 +1,39 @@
-import { useEffect, useState } from "react";
-import type { TestStatus } from "../types/typing";
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { TestMode, TestStatus } from "../types/typing";
 
-export default function useTestTimer(duration: number, status: TestStatus) {
+export default function useTestTimer(mode: TestMode, duration: number, status: TestStatus) {
     const [remainingTime, setRemainingTime] = useState(duration);
+    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
     
     useEffect(() => {
         setRemainingTime(duration);
     }, [duration]);
 
+    const clearTimer = useCallback(() => {
+        if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+        }
+    }, []);
+
+    const resetTimer = useCallback(() => {
+        clearTimer();
+        setRemainingTime(duration);
+    }, [duration, clearTimer]);
+
     useEffect(() => {
+        if (mode !== "time") {
+            clearTimer();
+            return;
+        }
         if (status !== "running") {
             return;
         }
 
-        const interval = setInterval(() => {
+        intervalRef.current = setInterval(() => {
             setRemainingTime((prevTime) => {
                 if (prevTime <= 1) {
-                    clearInterval(interval);
+                    clearTimer();
                     return 0;
                 }
 
@@ -24,10 +41,9 @@ export default function useTestTimer(duration: number, status: TestStatus) {
             });
         }, 1000);
 
-        return () => {
-            clearInterval(interval)
-        }
-    }, [status]);
+        return clearTimer;
 
-    return { remainingTime };
+    }, [mode, status]);
+
+    return { remainingTime, resetTimer };
 }

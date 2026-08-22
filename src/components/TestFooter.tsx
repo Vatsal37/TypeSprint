@@ -1,10 +1,17 @@
 import { RotateCw } from "lucide-react"
 
+interface TestFooterProps {
+    onRestart: () => void;
+}
 
-function TestFooter() {
+function TestFooter({ onRestart }: TestFooterProps) {
+  const handleRestart = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.currentTarget.blur();
+    onRestart();
+  }
   return (
     <div className="flex flex-col justify-between items-center">
-        <button className="rounded-xl px-2 py-1.5 mb-4 bg-slate-700 text-slate-400 hover:text-slate-100">
+        <button className="rounded-xl px-2 py-1.5 mb-4 bg-slate-700 text-slate-400 hover:text-slate-100" onClick={handleRestart}>
             <RotateCw/>
         </button>
 

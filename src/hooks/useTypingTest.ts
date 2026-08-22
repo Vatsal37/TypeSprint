@@ -5,6 +5,11 @@ import useInactivityTimer from "./useInactivityTimer";
 
 export function useTypingTest(initialState: TestState, mode: TestMode) {
     const [state, setState] = useState<TestState>(initialState);
+
+    useEffect(() => {
+        setState(initialState);
+    }, [initialState]);
+
     const pauseTest = useCallback(() => {
         setState((prevState) => {
             if (prevState.status !== "running") {
@@ -54,6 +59,7 @@ export function useTypingTest(initialState: TestState, mode: TestMode) {
     return {
         state,
         handleKey,
-        completeTest
+        completeTest,
+        clearTimer,
     }
 }

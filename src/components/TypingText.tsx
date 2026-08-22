@@ -46,7 +46,7 @@ export function TypingText({ targetWords, typedWords, currentTypedWord, currentW
     }, [currentWordIndex, currentTypedWord]);
 
     return (
-        <div ref={containerRef} className="relative text-3xl font-semibold whitespace-pre-wrap">
+        <div ref={containerRef} className="relative text-3xl font-semibold max-w-7xl whitespace-pre-wrap flex flex-wrap gap-2">
             {targetWords.map((word, index) => (
                 <TypingWord key={index} targetWord={word} typedWord={index < currentWordIndex ? typedWords[index] : index === currentWordIndex ? currentTypedWord : ""} onCharRefs={(charIndex, element) => onCharRefs(index, charIndex, element)} />
             ))}
